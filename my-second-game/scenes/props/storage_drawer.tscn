@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/interactable.gd" id="1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_Frame"]
+size = Vector3(0.9, 0.9, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Frame"]
+albedo_color = Color(0.32, 0.3, 0.26, 1)
+roughness = 0.85
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_Frame"]
+size = Vector3(0.9, 0.9, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_Drawer"]
+size = Vector3(0.8, 0.25, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Drawer"]
+albedo_color = Color(0.42, 0.4, 0.35, 1)
+roughness = 0.7
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_Drawer"]
+size = Vector3(0.8, 0.25, 0.45)
+
+[node name="StorageDrawer" type="Node3D"]
+
+[node name="Frame" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Frame"]
+mesh = SubResource("BoxMesh_Frame")
+surface_material_override/0 = SubResource("StandardMaterial3D_Frame")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Frame"]
+shape = SubResource("BoxShape3D_Frame")
+
+[node name="Drawer" type="AnimatableBody3D" parent="."]
+position = Vector3(0, -0.15, 0.02)
+script = ExtResource("1")
+type = 2
+display_name = "Drawer"
+open_axis = Vector3(0, 0, 1)
+open_distance = 0.55
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Drawer"]
+mesh = SubResource("BoxMesh_Drawer")
+surface_material_override/0 = SubResource("StandardMaterial3D_Drawer")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Drawer"]
+shape = SubResource("BoxShape3D_Drawer")

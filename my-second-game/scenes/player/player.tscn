@@ -19,3 +19,6 @@ current = true
 
 [node name="InteractRayCast3D" type="RayCast3D" parent="Camera3D"]
 target_position = Vector3(0, 0, -3)
+
+[node name="HoldPoint" type="Marker3D" parent="Camera3D"]
+position = Vector3(0, -0.2, -0.7)

@@ -12,17 +12,25 @@ const CROUCH_CAMERA_Y := 0.9
 const CROUCH_LERP_SPEED := 6.0
 
 const INTERACT_DISTANCE := 3.0
+const THROW_FORCE := 8.0
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var is_crouching := false
 
+var held_body: RigidBody3D = null
+var _held_original_parent: Node = null
+var _held_original_layer: int = 0
+var _held_original_mask: int = 0
+
 @onready var camera: Camera3D = $Camera3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var interact_ray: RayCast3D = $Camera3D/InteractRayCast3D
+@onready var hold_point: Marker3D = $Camera3D/HoldPoint
 
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	interact_ray.target_position = Vector3(0, 0, -INTERACT_DISTANCE)
 	# Avoid mutating the shared CapsuleShape3D resource across instances.
 	collision_shape.shape = collision_shape.shape.duplicate()
 
@@ -41,6 +49,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("interact"):
 		_try_interact()
+
+	if event.is_action_pressed("throw"):
+		_throw_held()
 
 
 func _physics_process(delta: float) -> void:
@@ -78,7 +89,61 @@ func _update_crouch(delta: float) -> void:
 
 
 func _try_interact() -> void:
-	if interact_ray.is_colliding():
-		var collider := interact_ray.get_collider()
-		if collider and collider.has_method("interact"):
-			collider.interact()
+	if held_body != null:
+		_release_held(false)
+		return
+
+	if not interact_ray.is_colliding():
+		return
+
+	var collider := interact_ray.get_collider()
+	if not (collider is Interactable):
+		return
+
+	if collider.type == Interactable.Type.PICKABLE and collider is RigidBody3D:
+		_pick_up(collider)
+	else:
+		collider.interact()
+
+
+func _pick_up(body: RigidBody3D) -> void:
+	held_body = body
+	_held_original_parent = body.get_parent()
+	_held_original_layer = body.collision_layer
+	_held_original_mask = body.collision_mask
+
+	_held_original_parent.remove_child(body)
+	hold_point.add_child(body)
+	body.transform = Transform3D.IDENTITY
+
+	body.freeze = true
+	body.linear_velocity = Vector3.ZERO
+	body.angular_velocity = Vector3.ZERO
+	body.collision_layer = 0
+	body.collision_mask = 0
+
+
+func _throw_held() -> void:
+	if held_body != null:
+		_release_held(true)
+
+
+func _release_held(throw: bool) -> void:
+	var body := held_body
+	var released_transform := body.global_transform
+
+	hold_point.remove_child(body)
+	_held_original_parent.add_child(body)
+	body.global_transform = released_transform
+
+	body.collision_layer = _held_original_layer
+	body.collision_mask = _held_original_mask
+	body.freeze = false
+	body.linear_velocity = velocity
+	body.angular_velocity = Vector3.ZERO
+
+	if throw:
+		body.linear_velocity += -camera.global_transform.basis.z * THROW_FORCE
+
+	held_body = null
+	_held_original_parent = null

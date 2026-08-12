@@ -1,6 +1,10 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/props/tire.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/props/gas_jug.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/props/pipe.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/props/storage_drawer.tscn" id="5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_top_color = Color(0.02, 0.03, 0.08, 1)
@@ -102,6 +106,12 @@ size = Vector3(2.5, 1.2, 0.3)
 use_collision = false
 material = SubResource("StandardMaterial3D_Glow")
 
+[node name="StorageDrawer" parent="StoreBuilding" instance=ExtResource("5")]
+position = Vector3(3, 0.45, -4)
+
+[node name="GasJug" parent="StoreBuilding" instance=ExtResource("3")]
+position = Vector3(3, 0.65, -3.95)
+
 [node name="PumpCanopy" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 10)
 
@@ -160,6 +170,12 @@ light_color = Color(0.95, 0.9, 0.75, 1)
 light_energy = 3.0
 omni_range = 10.0
 shadow_enabled = true
+
+[node name="Tire" parent="." instance=ExtResource("2")]
+position = Vector3(-17, 0.25, -9)
+
+[node name="Pipe" parent="." instance=ExtResource("4")]
+position = Vector3(5, 0.08, 8)
 
 [node name="Player" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, 3)
