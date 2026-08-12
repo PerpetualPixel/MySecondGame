@@ -22,6 +22,8 @@ var _held_original_parent: Node = null
 var _held_original_layer: int = 0
 var _held_original_mask: int = 0
 
+var current_car: Car = null
+
 @onready var camera: Camera3D = $Camera3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var interact_ray: RayCast3D = $Camera3D/InteractRayCast3D
@@ -36,7 +38,7 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	if current_car == null and event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 		camera.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
 		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-89.0), deg_to_rad(89.0))
@@ -50,11 +52,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact"):
 		_try_interact()
 
-	if event.is_action_pressed("throw"):
+	if event.is_action_pressed("throw") and current_car == null:
 		_throw_held()
 
 
 func _physics_process(delta: float) -> void:
+	if current_car != null:
+		return
+
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
@@ -89,14 +94,25 @@ func _update_crouch(delta: float) -> void:
 
 
 func _try_interact() -> void:
+	if current_car != null:
+		current_car.exit_vehicle(self)
+		return
+
+	if not interact_ray.is_colliding():
+		if held_body != null:
+			_release_held(false)
+		return
+
+	var collider := interact_ray.get_collider()
+
+	if collider is Car:
+		collider.try_interact(self, interact_ray.get_collision_point())
+		return
+
 	if held_body != null:
 		_release_held(false)
 		return
 
-	if not interact_ray.is_colliding():
-		return
-
-	var collider := interact_ray.get_collider()
 	if not (collider is Interactable):
 		return
 
@@ -123,6 +139,16 @@ func _pick_up(body: RigidBody3D) -> void:
 	body.collision_mask = 0
 
 
+func take_held_part() -> RigidBody3D:
+	var body := held_body
+	if body == null:
+		return null
+	hold_point.remove_child(body)
+	held_body = null
+	_held_original_parent = null
+	return body
+
+
 func _throw_held() -> void:
 	if held_body != null:
 		_release_held(true)
@@ -147,3 +173,20 @@ func _release_held(throw: bool) -> void:
 
 	held_body = null
 	_held_original_parent = null
+
+
+func enter_vehicle(car: Car) -> void:
+	if held_body != null:
+		_release_held(false)
+
+	current_car = car
+	collision_shape.disabled = true
+	camera.current = false
+	velocity = Vector3.ZERO
+
+
+func exit_vehicle(exit_position: Vector3) -> void:
+	current_car = null
+	global_position = exit_position
+	collision_shape.disabled = false
+	camera.current = true

@@ -1,10 +1,12 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/props/tire.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/props/gas_jug.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/props/pipe.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/props/storage_drawer.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/props/engine.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/vehicles/car.tscn" id="7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 sky_top_color = Color(0.02, 0.03, 0.08, 1)
@@ -176,6 +178,21 @@ position = Vector3(-17, 0.25, -9)
 
 [node name="Pipe" parent="." instance=ExtResource("4")]
 position = Vector3(5, 0.08, 8)
+
+[node name="Engine" parent="." instance=ExtResource("6")]
+position = Vector3(3.5, 0.4, 9)
+
+[node name="Tire2" parent="." instance=ExtResource("2")]
+position = Vector3(1.5, 0.25, 5)
+
+[node name="Tire3" parent="." instance=ExtResource("2")]
+position = Vector3(4.5, 0.25, 5)
+
+[node name="Tire4" parent="." instance=ExtResource("2")]
+position = Vector3(2, 0.25, 6.5)
+
+[node name="Car" parent="." instance=ExtResource("7")]
+position = Vector3(3, 0.1, 4)
 
 [node name="Player" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, 3)

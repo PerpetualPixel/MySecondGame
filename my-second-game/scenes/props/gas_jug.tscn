@@ -16,6 +16,7 @@ size = Vector3(0.25, 0.35, 0.15)
 script = ExtResource("1")
 type = 0
 display_name = "Gas Jug"
+part_type = "gas"
 mass = 4.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

@@ -8,6 +8,8 @@ enum Type { PICKABLE, DOOR, DRAWER }
 
 @export var type: Type = Type.PICKABLE
 @export var display_name: String = "Object"
+## Non-empty for PICKABLE parts the car assembly can accept (e.g. "wheel", "engine", "gas").
+@export var part_type: String = ""
 
 @export_group("Door")
 @export var open_angle_degrees: float = 90.0
