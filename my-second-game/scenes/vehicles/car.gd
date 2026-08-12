@@ -112,7 +112,7 @@ func _try_attach_wheel(player: Node, hit_point: Vector3) -> void:
 	if index == -1:
 		return
 
-	var part := player.take_held_part()
+	var part: RigidBody3D = player.take_held_part()
 	wheel_filled[index] = true
 	_attach_visual(part, wheels[index], Vector3(0, 0, 90))
 
@@ -136,7 +136,7 @@ func _try_attach_engine(player: Node, hit_point: Vector3) -> void:
 	if hit_point.distance_to(engine_slot.global_position) > ATTACH_RANGE:
 		return
 
-	var part := player.take_held_part()
+	var part: RigidBody3D = player.take_held_part()
 	has_engine = true
 	_attach_visual(part, engine_slot)
 
@@ -147,7 +147,7 @@ func _try_attach_gas(player: Node, hit_point: Vector3) -> void:
 	if hit_point.distance_to(gas_slot.global_position) > ATTACH_RANGE:
 		return
 
-	var part := player.take_held_part()
+	var part: RigidBody3D = player.take_held_part()
 	has_gas = true
 	part.queue_free()
 
