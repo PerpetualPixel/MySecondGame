@@ -19,6 +19,8 @@ script = ExtResource("1")
 type = 0
 display_name = "Car Tire"
 part_type = "wheel"
+material_kind = "rubber"
+bounce_sound = "tire_bounce"
 mass = 8.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

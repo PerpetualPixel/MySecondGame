@@ -14,6 +14,10 @@ const CROUCH_LERP_SPEED := 6.0
 const INTERACT_DISTANCE := 3.0
 const THROW_FORCE := 8.0
 
+const FOOTSTEP_INTERVAL := 0.42
+const FOOTSTEP_INTERVAL_CROUCH := 0.6
+const FOOTSTEP_MIN_SPEED := 0.5
+
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var is_crouching := false
 
@@ -23,6 +27,9 @@ var _held_original_layer: int = 0
 var _held_original_mask: int = 0
 
 var current_car: Car = null
+
+var _footstep_timer := 0.0
+var _was_on_floor := true
 
 @onready var camera: Camera3D = $Camera3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
@@ -67,6 +74,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_crouching:
 		velocity.y = JUMP_VELOCITY
+		Sfx.play("jump", global_position)
 
 	_update_crouch(delta)
 
@@ -81,6 +89,7 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, speed)
 
 	move_and_slide()
+	_update_footsteps(delta)
 
 
 func _update_crouch(delta: float) -> void:
@@ -91,6 +100,44 @@ func _update_crouch(delta: float) -> void:
 	shape.height = move_toward(shape.height, target_height, CROUCH_LERP_SPEED * delta)
 	collision_shape.position.y = shape.height * 0.5
 	camera.position.y = move_toward(camera.position.y, target_camera_y, CROUCH_LERP_SPEED * delta)
+
+
+func _update_footsteps(delta: float) -> void:
+	var on_floor := is_on_floor()
+
+	if on_floor and not _was_on_floor:
+		Sfx.play("land", global_position)
+	_was_on_floor = on_floor
+
+	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+	if not on_floor or horizontal_speed < FOOTSTEP_MIN_SPEED:
+		_footstep_timer = 0.0
+		return
+
+	_footstep_timer -= delta
+	if _footstep_timer <= 0.0:
+		Sfx.play("footstep_" + _detect_surface(), global_position)
+		_footstep_timer = FOOTSTEP_INTERVAL_CROUCH if is_crouching else FOOTSTEP_INTERVAL
+
+
+func _detect_surface() -> String:
+	var collision := get_last_slide_collision()
+	if collision == null:
+		return "concrete"
+	var collider := collision.get_collider()
+	if collider == null:
+		return "concrete"
+
+	var source_name := String(collider.name)
+	if collider.get_parent():
+		source_name = String(collider.get_parent().name)
+	source_name = source_name.to_upper()
+
+	if source_name.contains("GRASS"):
+		return "grass"
+	if source_name.contains("GROUND") or source_name.contains("DIRT") or source_name.contains("SAND"):
+		return "dirt"
+	return "concrete"
 
 
 func _try_interact() -> void:
@@ -109,17 +156,17 @@ func _try_interact() -> void:
 		collider.try_interact(self, interact_ray.get_collision_point())
 		return
 
+	# Doors/drawers (like the car hood) toggle regardless of what's held.
+	if collider is Interactable and collider.type != Interactable.Type.PICKABLE:
+		collider.interact()
+		return
+
 	if held_body != null:
 		_release_held(false)
 		return
 
-	if not (collider is Interactable):
-		return
-
-	if collider.type == Interactable.Type.PICKABLE and collider is RigidBody3D:
+	if collider is Interactable and collider.type == Interactable.Type.PICKABLE and collider is RigidBody3D:
 		_pick_up(collider)
-	else:
-		collider.interact()
 
 
 func _pick_up(body: RigidBody3D) -> void:
@@ -138,6 +185,8 @@ func _pick_up(body: RigidBody3D) -> void:
 	body.collision_layer = 0
 	body.collision_mask = 0
 
+	Sfx.play("pickup_" + _material_kind_of(body), global_position)
+
 
 func take_held_part() -> RigidBody3D:
 	var body := held_body
@@ -152,11 +201,13 @@ func take_held_part() -> RigidBody3D:
 func _throw_held() -> void:
 	if held_body != null:
 		_release_held(true)
+		Sfx.play("throw", camera.global_position)
 
 
 func _release_held(throw: bool) -> void:
 	var body := held_body
 	var released_transform := body.global_transform
+	var material_kind := _material_kind_of(body)
 
 	hold_point.remove_child(body)
 	_held_original_parent.add_child(body)
@@ -170,9 +221,17 @@ func _release_held(throw: bool) -> void:
 
 	if throw:
 		body.linear_velocity += -camera.global_transform.basis.z * THROW_FORCE
+	else:
+		Sfx.play("drop_" + material_kind, body.global_position)
 
 	held_body = null
 	_held_original_parent = null
+
+
+func _material_kind_of(body: Node) -> String:
+	if body is Interactable:
+		return body.material_kind
+	return "metal"
 
 
 func enter_vehicle(car: Car) -> void:

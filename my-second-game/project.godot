@@ -15,14 +15,19 @@ run/main_scene="res://scenes/levels/gas_station_level.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Objectives="*res://scripts/autoload/objectives.gd"
+Sfx="*res://scripts/autoload/sfx.gd"
+
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/size/mode.debug=3
-window/size/borderless.debug=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/size/mode.debug=3
+window/size/borderless.debug=true
 
 [input]
 

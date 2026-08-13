@@ -17,6 +17,7 @@ script = ExtResource("1")
 type = 0
 display_name = "Gas Jug"
 part_type = "gas"
+material_kind = "plastic"
 mass = 4.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

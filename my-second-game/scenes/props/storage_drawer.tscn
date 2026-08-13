@@ -40,6 +40,8 @@ type = 2
 display_name = "Drawer"
 open_axis = Vector3(0, 0, 1)
 open_distance = 0.55
+open_sound = "drawer_open"
+close_sound = "drawer_close"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Drawer"]
 mesh = SubResource("BoxMesh_Drawer")
