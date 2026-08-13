@@ -45,8 +45,11 @@ func _ready() -> void:
 	_closed_transform = transform
 	_target_transform = transform
 
-	if bounce_sound != "" and self is RigidBody3D:
-		var rb := self as RigidBody3D
+	# Indirect through an untyped local: Interactable extends PhysicsBody3D, so a
+	# direct `self is RigidBody3D` check is rejected at parse time.
+	var this_node: Node = self
+	if bounce_sound != "" and this_node is RigidBody3D:
+		var rb: RigidBody3D = this_node
 		rb.contact_monitor = true
 		rb.max_contacts_reported = 4
 		rb.body_entered.connect(_on_body_entered)
@@ -97,7 +100,10 @@ func _play_toggle_sound() -> void:
 func _on_body_entered(_body: Node) -> void:
 	if bounce_sound == "" or _bounce_timer > 0.0:
 		return
-	if self is RigidBody3D and (self as RigidBody3D).linear_velocity.length() < bounce_min_speed:
-		return
+	var this_node: Node = self
+	if this_node is RigidBody3D:
+		var rb: RigidBody3D = this_node
+		if rb.linear_velocity.length() < bounce_min_speed:
+			return
 	_bounce_timer = bounce_cooldown
 	Sfx.play(bounce_sound, global_position)

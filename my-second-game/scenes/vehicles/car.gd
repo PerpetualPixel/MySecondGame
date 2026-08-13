@@ -12,11 +12,11 @@ const WHEEL_PART_NAMES := ["Duke69_WhellStock_FL", "Duke69_WhellStock_FR", "Duke
 
 var has_engine := false
 var has_gas := false
-var wheel_filled := [false, false, false, false]
+var wheel_filled: Array[bool] = [false, false, false, false]
 
 var driver: Node = null
 var _steer_amount := 0.0
-var _wheel_meshes: Array = [null, null, null, null]
+var _wheel_meshes: Array[MeshInstance3D] = [null, null, null, null]
 
 @onready var wheels: Array[VehicleWheel3D] = [$WheelFL, $WheelFR, $WheelRL, $WheelRR]
 @onready var engine_slot: Marker3D = $EngineSlot

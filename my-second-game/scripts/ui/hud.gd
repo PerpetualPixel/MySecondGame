@@ -5,7 +5,7 @@ const ObjectiveLineScene := preload("res://scenes/ui/objective_line.tscn")
 @onready var objective_list: VBoxContainer = $ObjectivePanel/VBox/ObjectiveList
 @onready var scribble_sound: AudioStreamPlayer = $ScribbleSound
 
-var _lines: Dictionary = {}
+var _lines: Dictionary[String, Label] = {}
 
 
 func _ready() -> void:

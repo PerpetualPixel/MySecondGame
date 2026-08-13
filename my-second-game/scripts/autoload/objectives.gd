@@ -4,8 +4,8 @@ signal objective_added(id: String, text: String)
 signal objective_completed(id: String)
 
 var _order: Array[String] = []
-var _texts: Dictionary = {}
-var _completed: Dictionary = {}
+var _texts: Dictionary[String, String] = {}
+var _completed: Dictionary[String, bool] = {}
 
 
 func add(id: String, text: String) -> void:
@@ -29,7 +29,9 @@ func is_completed(id: String) -> bool:
 
 
 func get_order() -> Array[String]:
-	return _order.duplicate()
+	var copy: Array[String] = []
+	copy.assign(_order)
+	return copy
 
 
 func get_text(id: String) -> String:

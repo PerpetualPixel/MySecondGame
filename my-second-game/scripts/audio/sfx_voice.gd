@@ -81,7 +81,7 @@ func _fill_buffer() -> void:
 				var noise := randf_range(-1.0, 1.0)
 				var filtered := noise
 				if noise_filter == "lowpass":
-					_lp_state = lerp(_lp_state, noise, 1.0 - filter_strength)
+					_lp_state = lerpf(_lp_state, noise, 1.0 - filter_strength)
 					filtered = _lp_state
 				elif noise_filter == "highpass":
 					filtered = noise - _last_sample
@@ -89,7 +89,7 @@ func _fill_buffer() -> void:
 				sample += filtered * noise_amount * env
 
 			if tone_amount > 0.0:
-				var freq := lerp(tone_freq_start, tone_freq_end, progress)
+				var freq := lerpf(tone_freq_start, tone_freq_end, progress)
 				_tone_phase += freq * frame_time * TAU
 				sample += sin(_tone_phase) * tone_amount * env
 
