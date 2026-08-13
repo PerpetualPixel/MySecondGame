@@ -1,65 +1,15 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="1"]
+[ext_resource type="ArrayMesh" path="res://assets/models/engine/YaMZ-238.obj" id="2"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_Block"]
-size = Vector3(0.5, 0.4, 0.55)
-
-[sub_resource type="StandardMaterial3D" id="Mat_Block"]
+[sub_resource type="StandardMaterial3D" id="Mat_Engine"]
 albedo_color = Color(0.32, 0.33, 0.35, 1)
 metallic = 0.6
 roughness = 0.35
 
-[sub_resource type="BoxMesh" id="BoxMesh_ValveCover"]
-size = Vector3(0.5, 0.12, 0.55)
-
-[sub_resource type="StandardMaterial3D" id="Mat_ValveCover"]
-albedo_color = Color(0.58, 0.59, 0.61, 1)
-metallic = 0.5
-roughness = 0.3
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_Cap"]
-top_radius = 0.07
-bottom_radius = 0.07
-height = 0.1
-
-[sub_resource type="StandardMaterial3D" id="Mat_Red"]
-albedo_color = Color(0.75, 0.18, 0.08, 1)
-metallic = 0.3
-roughness = 0.4
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_Pulley"]
-top_radius = 0.16
-bottom_radius = 0.16
-height = 0.08
-
-[sub_resource type="StandardMaterial3D" id="Mat_Blue"]
-albedo_color = Color(0.12, 0.35, 0.75, 1)
-metallic = 0.5
-roughness = 0.3
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_Hub"]
-top_radius = 0.045
-bottom_radius = 0.045
-height = 0.09
-
-[sub_resource type="StandardMaterial3D" id="Mat_DarkHub"]
-albedo_color = Color(0.08, 0.08, 0.09, 1)
-metallic = 0.4
-roughness = 0.5
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_PipeDown"]
-top_radius = 0.045
-bottom_radius = 0.045
-height = 0.3
-
-[sub_resource type="StandardMaterial3D" id="Mat_Chrome"]
-albedo_color = Color(0.75, 0.76, 0.78, 1)
-metallic = 0.9
-roughness = 0.15
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
-size = Vector3(0.9, 0.78, 0.66)
+size = Vector3(0.6, 0.6, 0.75)
 
 [node name="Engine" type="RigidBody3D"]
 script = ExtResource("1")
@@ -68,56 +18,10 @@ display_name = "Engine Block"
 part_type = "engine"
 mass = 25.0
 
-[node name="Block" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_Block")
-surface_material_override/0 = SubResource("Mat_Block")
-
-[node name="ValveCover" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
-mesh = SubResource("BoxMesh_ValveCover")
-surface_material_override/0 = SubResource("Mat_ValveCover")
-
-[node name="Cap1" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.35, 0.05)
-mesh = SubResource("CylinderMesh_Cap")
-surface_material_override/0 = SubResource("Mat_Red")
-
-[node name="Cap2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0.05)
-mesh = SubResource("CylinderMesh_Cap")
-surface_material_override/0 = SubResource("Mat_Red")
-
-[node name="Cap3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.35, 0.05)
-mesh = SubResource("CylinderMesh_Cap")
-surface_material_override/0 = SubResource("Mat_Red")
-
-[node name="Pulley" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, -0.32, -0.05, 0.15)
-mesh = SubResource("CylinderMesh_Pulley")
-surface_material_override/0 = SubResource("Mat_Blue")
-
-[node name="PulleyHub" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, -0.36, -0.05, 0.15)
-mesh = SubResource("CylinderMesh_Hub")
-surface_material_override/0 = SubResource("Mat_DarkHub")
-
-[node name="PipeDown" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, -0.18, 0.32)
-mesh = SubResource("CylinderMesh_PipeDown")
-surface_material_override/0 = SubResource("Mat_Chrome")
-
-[node name="PipeOut" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0.25, -0.32, 0.32)
-mesh = SubResource("CylinderMesh_PipeDown")
-surface_material_override/0 = SubResource("Mat_Chrome")
-
-[node name="WireConnector" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.38, -0.1)
-mesh = SubResource("BoxMesh_ValveCover")
-surface_material_override/0 = SubResource("Mat_DarkHub")
-scale = Vector3(0.28, 0.35, 0.2)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0.0345, 0.0518)
+mesh = ExtResource("2")
+surface_material_override/0 = SubResource("Mat_Engine")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.04, 0.04)
 shape = SubResource("BoxShape3D_1")
