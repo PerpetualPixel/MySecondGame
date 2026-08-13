@@ -46,8 +46,16 @@ func play(preset_name: String, at_position: Vector3, pitch_variance: float = 0.0
 	if not is_inside_tree():
 		return
 
+	# current_scene is null during scene transitions and when a level is hosted
+	# manually (tools/tests); fall back to the root rather than crashing.
+	var parent: Node = get_tree().current_scene
+	if parent == null:
+		parent = get_tree().root
+	if parent == null:
+		return
+
 	var voice: AudioStreamPlayer3D = SfxVoiceScript.new()
-	get_tree().current_scene.add_child(voice)
+	parent.add_child(voice)
 	voice.global_position = at_position
 	voice.pitch_scale = 1.0 + randf_range(-pitch_variance, pitch_variance)
 

@@ -13,7 +13,29 @@ func _ready() -> void:
 	_collect_meshes(self, meshes)
 	for mesh in meshes:
 		if not _should_skip(mesh.name):
-			mesh.create_trimesh_collision()
+			_add_collision(mesh)
+
+
+func _add_collision(mesh: MeshInstance3D) -> void:
+	# Deliberately not MeshInstance3D.create_trimesh_collision(): the shape it
+	# builds is single-sided, and much of this environment (the ground plane in
+	# particular) is zero-thickness geometry whose faces point away from the
+	# play area. Rays still hit those faces and kinematic bodies still resolve
+	# against them, but rigid bodies fall straight through. Building the shape
+	# by hand lets us enable backface collision so props and the car rest on it.
+	if mesh.mesh == null:
+		return
+	var shape := mesh.mesh.create_trimesh_shape()
+	if shape == null:
+		return
+	shape.backface_collision = true
+
+	var body := StaticBody3D.new()
+	body.name = mesh.name + "_col"
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	body.add_child(collision)
+	mesh.add_child(body)
 
 
 func _collect_meshes(node: Node, out: Array[MeshInstance3D]) -> void:
