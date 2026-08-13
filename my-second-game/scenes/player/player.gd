@@ -36,6 +36,7 @@ var _was_on_floor := true
 @onready var interact_ray: RayCast3D = $Camera3D/InteractRayCast3D
 @onready var hold_point: Marker3D = $Camera3D/HoldPoint
 @onready var character_model: Node3D = $CharacterModel
+@onready var footstep_player: AudioStreamPlayer3D = $FootstepPlayer
 
 
 func _ready() -> void:
@@ -135,7 +136,12 @@ func _update_footsteps(delta: float) -> void:
 
 	_footstep_timer -= delta
 	if _footstep_timer <= 0.0:
-		Sfx.play("footstep_" + _detect_surface(), global_position)
+		var surface := _detect_surface()
+		if surface == "concrete":
+			# Recorded sample, sliced one step at a time so our cadence drives it.
+			footstep_player.play_step()
+		else:
+			Sfx.play("footstep_" + surface, global_position)
 		_footstep_timer = FOOTSTEP_INTERVAL_CROUCH if is_crouching else FOOTSTEP_INTERVAL
 
 
