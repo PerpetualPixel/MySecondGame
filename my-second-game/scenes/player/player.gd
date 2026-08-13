@@ -144,7 +144,7 @@ func _update_footsteps(delta: float) -> void:
 		var surface := _detect_surface()
 		if surface == "concrete":
 			# Recorded sample, sliced one step at a time so our cadence drives it.
-			footstep_player.play_step()
+			footstep_player.play_slice()
 		else:
 			Sfx.play("footstep_" + surface, global_position)
 		_footstep_timer = FOOTSTEP_INTERVAL_CROUCH if is_crouching else FOOTSTEP_INTERVAL
