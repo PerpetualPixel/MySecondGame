@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1"]
 [ext_resource type="PackedScene" path="res://assets/models/player/PlayerCharacter.glb" id="2"]
-[ext_resource type="Script" path="res://scripts/audio/footstep_player.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/audio/sliced_sfx_player.gd" id="3"]
 [ext_resource type="AudioStream" path="res://assets/audio/footsteps/walk_concrete.mp3" id="4"]
+[ext_resource type="AudioStream" path="res://assets/audio/footsteps/land_concrete.mp3" id="5"]
+[ext_resource type="AudioStream" path="res://assets/audio/voice/jump_grunt.mp3" id="6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
@@ -36,3 +38,26 @@ volume_db = -6.0
 unit_size = 4.0
 max_distance = 25.0
 script = ExtResource("3")
+slice_offsets = PackedFloat32Array(0.46, 1.17, 1.87, 2.54, 3.21, 3.86, 4.56, 5.21, 5.91, 6.59, 7.3)
+slice_duration = 0.4
+
+[node name="LandingPlayer" type="AudioStreamPlayer3D" parent="."]
+position = Vector3(0, 0.15, 0)
+stream = ExtResource("5")
+volume_db = -7.0
+unit_size = 5.0
+max_distance = 30.0
+script = ExtResource("3")
+slice_offsets = PackedFloat32Array(2.035, 4.975, 7.96, 10.91, 14.275, 17.25)
+slice_duration = 0.35
+
+[node name="JumpVoicePlayer" type="AudioStreamPlayer3D" parent="."]
+position = Vector3(0, 1.5, 0)
+stream = ExtResource("6")
+volume_db = -12.0
+unit_size = 5.0
+max_distance = 30.0
+script = ExtResource("3")
+slice_offsets = PackedFloat32Array(0.165, 1.295, 2.48)
+slice_duration = 0.45
+pitch_variance = 0.04

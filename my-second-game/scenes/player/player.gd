@@ -37,6 +37,8 @@ var _was_on_floor := true
 @onready var hold_point: Marker3D = $Camera3D/HoldPoint
 @onready var character_model: Node3D = $CharacterModel
 @onready var footstep_player: AudioStreamPlayer3D = $FootstepPlayer
+@onready var landing_player: AudioStreamPlayer3D = $LandingPlayer
+@onready var jump_voice_player: AudioStreamPlayer3D = $JumpVoicePlayer
 
 
 func _ready() -> void:
@@ -94,7 +96,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_crouching:
 		velocity.y = JUMP_VELOCITY
-		Sfx.play("jump", global_position)
+		jump_voice_player.play_slice()
 
 	_update_crouch(delta)
 
@@ -126,7 +128,10 @@ func _update_footsteps(delta: float) -> void:
 	var on_floor := is_on_floor()
 
 	if on_floor and not _was_on_floor:
-		Sfx.play("land", global_position)
+		if _detect_surface() == "concrete":
+			landing_player.play_slice()
+		else:
+			Sfx.play("land", global_position)
 	_was_on_floor = on_floor
 
 	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
