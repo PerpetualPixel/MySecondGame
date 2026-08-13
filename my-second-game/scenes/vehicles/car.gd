@@ -153,11 +153,12 @@ func _try_attach_gas(player: Node, hit_point: Vector3) -> void:
 
 
 func _attach_visual(part: Node3D, slot: Node3D, extra_rotation_degrees: Vector3 = Vector3.ZERO) -> void:
-	var source_mesh: MeshInstance3D = part.get_node_or_null("MeshInstance3D")
-	if source_mesh:
-		var visual := MeshInstance3D.new()
-		visual.mesh = source_mesh.mesh
-		visual.set_surface_override_material(0, source_mesh.get_surface_override_material(0))
-		visual.rotation_degrees = extra_rotation_degrees
-		slot.add_child(visual)
+	var visual_root := Node3D.new()
+	visual_root.rotation_degrees = extra_rotation_degrees
+	slot.add_child(visual_root)
+
+	for child in part.get_children():
+		if child is MeshInstance3D:
+			visual_root.add_child(child.duplicate())
+
 	part.queue_free()
