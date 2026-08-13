@@ -35,6 +35,7 @@ var _was_on_floor := true
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var interact_ray: RayCast3D = $Camera3D/InteractRayCast3D
 @onready var hold_point: Marker3D = $Camera3D/HoldPoint
+@onready var character_model: Node3D = $CharacterModel
 
 
 func _ready() -> void:
@@ -42,6 +43,24 @@ func _ready() -> void:
 	interact_ray.target_position = Vector3(0, 0, -INTERACT_DISTANCE)
 	# Avoid mutating the shared CapsuleShape3D resource across instances.
 	collision_shape.shape = collision_shape.shape.duplicate()
+	_make_own_body_invisible()
+
+
+func _make_own_body_invisible() -> void:
+	# The first-person camera sits at head height, inside the character mesh.
+	# Render the body to shadows only so it still grounds the player visually
+	# (and in the car's mirror/exterior views) without blocking the view.
+	for mesh in _collect_meshes(character_model):
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+
+
+func _collect_meshes(node: Node) -> Array[MeshInstance3D]:
+	var found: Array[MeshInstance3D] = []
+	if node is MeshInstance3D:
+		found.append(node)
+	for child in node.get_children():
+		found.append_array(_collect_meshes(child))
+	return found
 
 
 func _unhandled_input(event: InputEvent) -> void:
