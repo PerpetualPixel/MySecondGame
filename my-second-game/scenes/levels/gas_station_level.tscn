@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=27 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/props/tire.tscn" id="2"]
@@ -9,13 +9,13 @@
 [ext_resource type="PackedScene" path="res://scenes/vehicles/car.tscn" id="7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
-sky_top_color = Color(0.02, 0.03, 0.08, 1)
-sky_horizon_color = Color(0.08, 0.09, 0.16, 1)
-sky_curve = 0.15
-ground_bottom_color = Color(0.02, 0.02, 0.03, 1)
-ground_horizon_color = Color(0.08, 0.09, 0.16, 1)
-ground_curve = 0.15
-sun_angle_max = 1.0
+sky_top_color = Color(0.04, 0.03, 0.09, 1)
+sky_horizon_color = Color(0.55, 0.28, 0.2, 1)
+sky_curve = 0.12
+ground_bottom_color = Color(0.03, 0.02, 0.04, 1)
+ground_horizon_color = Color(0.3, 0.16, 0.14, 1)
+ground_curve = 0.12
+sun_angle_max = 4.0
 
 [sub_resource type="Sky" id="Sky_1"]
 sky_material = SubResource("ProceduralSkyMaterial_1")
@@ -24,32 +24,104 @@ sky_material = SubResource("ProceduralSkyMaterial_1")
 background_mode = 2
 sky = SubResource("Sky_1")
 ambient_light_source = 3
-ambient_light_energy = 0.15
+ambient_light_energy = 0.25
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.9
+glow_bloom = 0.18
+glow_hdr_threshold = 1.0
 fog_enabled = true
-fog_light_color = Color(0.05, 0.06, 0.1, 1)
-fog_density = 0.015
+fog_light_color = Color(0.35, 0.18, 0.13, 1)
+fog_density = 0.02
+fog_sun_scatter = 0.5
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.035
+volumetric_fog_albedo = Color(0.65, 0.48, 0.32, 1)
+volumetric_fog_emission = Color(0.25, 0.15, 0.08, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Sand"]
-albedo_color = Color(0.36, 0.3, 0.22, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_Sand"]
+albedo_color = Color(0.34, 0.28, 0.2, 1)
 roughness = 0.95
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Asphalt"]
-albedo_color = Color(0.08, 0.08, 0.09, 1)
-roughness = 0.85
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Concrete"]
-albedo_color = Color(0.28, 0.27, 0.25, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_Asphalt"]
+albedo_color = Color(0.07, 0.07, 0.08, 1)
 roughness = 0.9
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Canopy"]
-albedo_color = Color(0.55, 0.1, 0.08, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_LineWhite"]
+albedo_color = Color(0.85, 0.85, 0.8, 1)
+roughness = 0.6
+emission_enabled = true
+emission = Color(0.7, 0.7, 0.65, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_LineYellow"]
+albedo_color = Color(0.85, 0.7, 0.1, 1)
+roughness = 0.6
+emission_enabled = true
+emission = Color(0.7, 0.55, 0.05, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_Concrete"]
+albedo_color = Color(0.55, 0.53, 0.48, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_CanopyRoof"]
+albedo_color = Color(0.32, 0.21, 0.15, 1)
+metallic = 0.3
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="Mat_PumpRed"]
+albedo_color = Color(0.72, 0.1, 0.08, 1)
+metallic = 0.15
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_SafetyYellow"]
+albedo_color = Color(0.82, 0.65, 0.05, 1)
 roughness = 0.7
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Glow"]
-albedo_color = Color(0.6, 0.85, 0.9, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_ScreenGlow"]
+albedo_color = Color(0.6, 0.95, 0.7, 1)
 emission_enabled = true
-emission = Color(0.5, 0.85, 1, 1)
-emission_energy_multiplier = 2.5
+emission = Color(0.5, 1, 0.6, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_Hose"]
+albedo_color = Color(0.05, 0.05, 0.05, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_GlassGlow"]
+albedo_color = Color(0.55, 0.7, 0.75, 0.35)
+transparency = 1
+emission_enabled = true
+emission = Color(0.9, 0.75, 0.45, 1)
+emission_energy_multiplier = 1.4
+roughness = 0.1
+
+[sub_resource type="StandardMaterial3D" id="Mat_SignGas"]
+albedo_color = Color(0.9, 0.3, 0.15, 1)
+emission_enabled = true
+emission = Color(1, 0.35, 0.1, 1)
+emission_energy_multiplier = 4.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_SignStore"]
+albedo_color = Color(0.3, 0.75, 0.9, 1)
+emission_enabled = true
+emission = Color(0.35, 0.85, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_IceCooler"]
+albedo_color = Color(0.1, 0.32, 0.62, 1)
+metallic = 0.1
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_Dumpster"]
+albedo_color = Color(0.14, 0.24, 0.13, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_DarkMetal"]
+albedo_color = Color(0.12, 0.12, 0.13, 1)
+metallic = 0.5
+roughness = 0.4
 
 [node name="GasStationLevel" type="Node3D"]
 
@@ -58,141 +130,420 @@ environment = SubResource("Environment_1")
 
 [node name="Moonlight" type="DirectionalLight3D" parent="."]
 position = Vector3(0, 10, 0)
-rotation_degrees = Vector3(-55, -35, 0)
-light_color = Color(0.55, 0.65, 0.95, 1)
-light_energy = 0.35
+rotation_degrees = Vector3(-15, -50, 0)
+light_color = Color(0.5, 0.55, 0.85, 1)
+light_energy = 0.25
 shadow_enabled = true
 
 [node name="Ground" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
-size = Vector3(80, 0.2, 80)
+size = Vector3(120, 0.2, 120)
 use_collision = true
-material = SubResource("StandardMaterial3D_Sand")
+material = SubResource("Mat_Sand")
 
 [node name="Road" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
-size = Vector3(10, 0.05, 80)
+size = Vector3(8, 0.06, 100)
 use_collision = false
-material = SubResource("StandardMaterial3D_Asphalt")
+material = SubResource("Mat_Asphalt")
+
+[node name="RoadEdgeLineL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 0.065, 0)
+size = Vector3(0.15, 0.02, 100)
+use_collision = false
+material = SubResource("Mat_LineWhite")
+
+[node name="RoadEdgeLineR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.7, 0.065, 0)
+size = Vector3(0.15, 0.02, 100)
+use_collision = false
+material = SubResource("Mat_LineWhite")
+
+[node name="RoadDashes" type="Node3D" parent="."]
+
+[node name="Dash1" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -22)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash2" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -18)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash3" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -14)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash4" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -10)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash5" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -6)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash6" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -2)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash7" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 2)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash8" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 6)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash9" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 10)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash10" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 14)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash11" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 18)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Dash12" type="CSGBox3D" parent="RoadDashes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 22)
+size = Vector3(0.15, 0.02, 2)
+use_collision = false
+material = SubResource("Mat_LineYellow")
+
+[node name="Apron" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0.03, 0)
+size = Vector3(19, 0.06, 18)
+use_collision = false
+material = SubResource("Mat_Concrete")
+
+[node name="PriceSign" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 9)
+
+[node name="SignPole" type="CSGBox3D" parent="PriceSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
+size = Vector3(0.4, 5.5, 0.4)
+use_collision = true
+material = SubResource("Mat_DarkMetal")
+
+[node name="SignBoard" type="CSGBox3D" parent="PriceSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2, 0)
+size = Vector3(2.2, 3.0, 0.5)
+use_collision = true
+material = SubResource("Mat_SignGas")
 
 [node name="StoreBuilding" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.5, 0, 0)
 
 [node name="Walls" type="CSGBox3D" parent="StoreBuilding"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-size = Vector3(12, 4, 10)
+size = Vector3(9, 4, 16)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_Concrete")
+
+[node name="InteriorCutout" type="CSGBox3D" parent="StoreBuilding/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+size = Vector3(8.4, 3.6, 15.4)
+operation = 2
+
+[node name="DoorCutout" type="CSGBox3D" parent="StoreBuilding/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.9, 0)
+size = Vector3(1.0, 2.2, 1.4)
+operation = 2
 
 [node name="Roof" type="CSGBox3D" parent="StoreBuilding"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.15, 0)
-size = Vector3(12.4, 0.3, 10.4)
+size = Vector3(9.4, 0.3, 16.4)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_CanopyRoof")
 
-[node name="Window" type="CSGBox3D" parent="StoreBuilding"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 5.05)
-size = Vector3(4, 1.5, 0.2)
+[node name="GlassLeft" type="CSGBox3D" parent="StoreBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 1.9, -3.2)
+size = Vector3(0.15, 1.8, 6)
 use_collision = false
-material = SubResource("StandardMaterial3D_Glow")
+material = SubResource("Mat_GlassGlow")
+
+[node name="GlassRight" type="CSGBox3D" parent="StoreBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 1.9, 3.2)
+size = Vector3(0.15, 1.8, 6)
+use_collision = false
+material = SubResource("Mat_GlassGlow")
+
+[node name="DoorFrame" type="CSGBox3D" parent="StoreBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 1.1, 0)
+size = Vector3(0.2, 2.2, 1.0)
+use_collision = false
+material = SubResource("Mat_DarkMetal")
+
+[node name="IceCooler" type="CSGBox3D" parent="StoreBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 0.7, -6.0)
+size = Vector3(1.2, 1.4, 0.8)
+use_collision = true
+material = SubResource("Mat_IceCooler")
+
+[node name="Dumpster" type="CSGBox3D" parent="StoreBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 0.8, 6.5)
+size = Vector3(2.0, 1.6, 1.4)
+use_collision = true
+material = SubResource("Mat_Dumpster")
 
 [node name="SignPost" type="CSGBox3D" parent="StoreBuilding"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8, 1.5, -7)
 size = Vector3(0.3, 3, 0.3)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_DarkMetal")
 
 [node name="Sign" type="CSGBox3D" parent="StoreBuilding"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.4, 5.5)
-size = Vector3(2.5, 1.2, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8, 3.3, -7)
+size = Vector3(2.2, 1.1, 0.3)
 use_collision = false
-material = SubResource("StandardMaterial3D_Glow")
+material = SubResource("Mat_SignStore")
 
 [node name="StorageDrawer" parent="StoreBuilding" instance=ExtResource("5")]
-position = Vector3(3, 0.45, -4)
+position = Vector3(-1, 0.45, -7.5)
 
 [node name="GasJug" parent="StoreBuilding" instance=ExtResource("3")]
-position = Vector3(3, 0.65, -3.95)
+position = Vector3(-1, 0.65, -7.45)
 
 [node name="PumpCanopy" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
 
 [node name="CanopyRoof" type="CSGBox3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
-size = Vector3(14, 0.3, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 0)
+size = Vector3(10, 0.3, 10)
 use_collision = true
-material = SubResource("StandardMaterial3D_Canopy")
+material = SubResource("Mat_CanopyRoof")
+
+[node name="CrossBeamX1" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, -4.3)
+size = Vector3(10, 0.25, 0.4)
+use_collision = false
+material = SubResource("Mat_CanopyRoof")
+
+[node name="CrossBeamX2" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, 4.3)
+size = Vector3(10, 0.25, 0.4)
+use_collision = false
+material = SubResource("Mat_CanopyRoof")
+
+[node name="CrossBeamZ1" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 4.35, 0)
+size = Vector3(0.4, 0.25, 10)
+use_collision = false
+material = SubResource("Mat_CanopyRoof")
+
+[node name="CrossBeamZ2" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 4.35, 0)
+size = Vector3(0.4, 0.25, 10)
+use_collision = false
+material = SubResource("Mat_CanopyRoof")
 
 [node name="PillarFL" type="CSGBox3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.15, -3.5)
-size = Vector3(0.3, 4.3, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.3, -4)
+size = Vector3(0.35, 4.6, 0.35)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_Concrete")
+
+[node name="PillarFLBase" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.45, -4)
+size = Vector3(0.6, 0.9, 0.6)
+use_collision = true
+material = SubResource("Mat_SafetyYellow")
 
 [node name="PillarFR" type="CSGBox3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.15, -3.5)
-size = Vector3(0.3, 4.3, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.3, -4)
+size = Vector3(0.35, 4.6, 0.35)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_Concrete")
+
+[node name="PillarFRBase" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.45, -4)
+size = Vector3(0.6, 0.9, 0.6)
+use_collision = true
+material = SubResource("Mat_SafetyYellow")
 
 [node name="PillarBL" type="CSGBox3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.15, 3.5)
-size = Vector3(0.3, 4.3, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.3, 4)
+size = Vector3(0.35, 4.6, 0.35)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_Concrete")
+
+[node name="PillarBLBase" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.45, 4)
+size = Vector3(0.6, 0.9, 0.6)
+use_collision = true
+material = SubResource("Mat_SafetyYellow")
 
 [node name="PillarBR" type="CSGBox3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.15, 3.5)
-size = Vector3(0.3, 4.3, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.3, 4)
+size = Vector3(0.35, 4.6, 0.35)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_Concrete")
 
-[node name="Pump1" type="CSGBox3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.6, 0)
-size = Vector3(0.6, 1.2, 0.4)
+[node name="PillarBRBase" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.45, 4)
+size = Vector3(0.6, 0.9, 0.6)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_SafetyYellow")
 
-[node name="Pump2" type="CSGBox3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.6, 0)
-size = Vector3(0.6, 1.2, 0.4)
+[node name="Island1" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.15, 0)
+size = Vector3(1.2, 0.3, 7)
 use_collision = true
-material = SubResource("StandardMaterial3D_Concrete")
+material = SubResource("Mat_Concrete")
 
-[node name="CanopyLight1" type="OmniLight3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4.2, 0)
-light_color = Color(0.95, 0.9, 0.75, 1)
-light_energy = 3.0
-omni_range = 10.0
+[node name="Pump1A" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.0, -2.3)
+size = Vector3(0.6, 1.4, 0.5)
+use_collision = true
+material = SubResource("Mat_PumpRed")
+
+[node name="Pump1AScreen" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.82, 1.1, -2.3)
+size = Vector3(0.05, 0.3, 0.35)
+use_collision = false
+material = SubResource("Mat_ScreenGlow")
+
+[node name="Pump1AHose" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.75, 0.5, -2.55)
+size = Vector3(0.06, 0.9, 0.06)
+use_collision = false
+material = SubResource("Mat_Hose")
+
+[node name="Pump1B" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.0, 2.3)
+size = Vector3(0.6, 1.4, 0.5)
+use_collision = true
+material = SubResource("Mat_PumpRed")
+
+[node name="Pump1BScreen" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.82, 1.1, 2.3)
+size = Vector3(0.05, 0.3, 0.35)
+use_collision = false
+material = SubResource("Mat_ScreenGlow")
+
+[node name="Pump1BHose" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.75, 0.5, 2.55)
+size = Vector3(0.06, 0.9, 0.06)
+use_collision = false
+material = SubResource("Mat_Hose")
+
+[node name="Island2" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.15, 0)
+size = Vector3(1.2, 0.3, 7)
+use_collision = true
+material = SubResource("Mat_Concrete")
+
+[node name="Pump2A" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.0, -2.3)
+size = Vector3(0.6, 1.4, 0.5)
+use_collision = true
+material = SubResource("Mat_PumpRed")
+
+[node name="Pump2AScreen" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.82, 1.1, -2.3)
+size = Vector3(0.05, 0.3, 0.35)
+use_collision = false
+material = SubResource("Mat_ScreenGlow")
+
+[node name="Pump2AHose" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.75, 0.5, -2.55)
+size = Vector3(0.06, 0.9, 0.06)
+use_collision = false
+material = SubResource("Mat_Hose")
+
+[node name="Pump2B" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.0, 2.3)
+size = Vector3(0.6, 1.4, 0.5)
+use_collision = true
+material = SubResource("Mat_PumpRed")
+
+[node name="Pump2BScreen" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.82, 1.1, 2.3)
+size = Vector3(0.05, 0.3, 0.35)
+use_collision = false
+material = SubResource("Mat_ScreenGlow")
+
+[node name="Pump2BHose" type="CSGBox3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.75, 0.5, 2.55)
+size = Vector3(0.06, 0.9, 0.06)
+use_collision = false
+material = SubResource("Mat_Hose")
+
+[node name="SpotFL" type="SpotLight3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -2.5, 4.3, -2.3)
+light_color = Color(0.95, 0.82, 0.55, 1)
+light_energy = 6.0
 shadow_enabled = true
+spot_range = 9.0
+spot_angle = 32.0
 
-[node name="CanopyLight2" type="OmniLight3D" parent="PumpCanopy"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 4.2, 0)
-light_color = Color(0.95, 0.9, 0.75, 1)
-light_energy = 3.0
-omni_range = 10.0
+[node name="SpotFR" type="SpotLight3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 2.5, 4.3, -2.3)
+light_color = Color(0.95, 0.82, 0.55, 1)
+light_energy = 6.0
 shadow_enabled = true
+spot_range = 9.0
+spot_angle = 32.0
+
+[node name="SpotBL" type="SpotLight3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -2.5, 4.3, 2.3)
+light_color = Color(0.95, 0.82, 0.55, 1)
+light_energy = 6.0
+shadow_enabled = true
+spot_range = 9.0
+spot_angle = 32.0
+
+[node name="SpotBR" type="SpotLight3D" parent="PumpCanopy"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 2.5, 4.3, 2.3)
+light_color = Color(0.95, 0.82, 0.55, 1)
+light_energy = 6.0
+shadow_enabled = true
+spot_range = 9.0
+spot_angle = 32.0
 
 [node name="Tire" parent="." instance=ExtResource("2")]
-position = Vector3(-17, 0.25, -9)
-
-[node name="Pipe" parent="." instance=ExtResource("4")]
-position = Vector3(5, 0.08, 8)
-
-[node name="Engine" parent="." instance=ExtResource("6")]
-position = Vector3(3.5, 0.4, 9)
+position = Vector3(-7.5, 0.25, 10)
 
 [node name="Tire2" parent="." instance=ExtResource("2")]
-position = Vector3(1.5, 0.25, 5)
+position = Vector3(-10.5, 0.25, 10)
 
 [node name="Tire3" parent="." instance=ExtResource("2")]
-position = Vector3(4.5, 0.25, 5)
+position = Vector3(-7.5, 0.25, 11.5)
 
 [node name="Tire4" parent="." instance=ExtResource("2")]
-position = Vector3(2, 0.25, 6.5)
+position = Vector3(-10.5, 0.25, 11.5)
+
+[node name="Pipe" parent="." instance=ExtResource("4")]
+position = Vector3(-9, 0.08, 2)
+
+[node name="Engine" parent="." instance=ExtResource("6")]
+position = Vector3(-9, 0.4, -6)
 
 [node name="Car" parent="." instance=ExtResource("7")]
-position = Vector3(3, 0.1, 4)
+position = Vector3(-9, 0.1, 10)
 
 [node name="Player" parent="." instance=ExtResource("1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1, 10)
